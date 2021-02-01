@@ -5,14 +5,14 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
-import org.pytorch.Tensor;
-import org.pytorch.Module;
+
 import org.pytorch.IValue;
+import org.pytorch.Module;
+import org.pytorch.Tensor;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 
 public class Classifier {
@@ -24,6 +24,7 @@ public class Classifier {
     //float[] std = TensorImageUtils.TORCHVISION_NORM_STD_RGB;
     float[] mean = {0.00000000000000f, 0.00000000000000f, 0.00000000000000f};
     float[] std =  {1.00000000000000f, 1.00000000000000f, 1.00000000000000f};
+
     float[][][][] pix = new float[Constants.batchSize][Constants.inputChannels][Constants.inputHeight][Constants.inputWidth];
     float [] pixFlat = new float[Constants.batchSize * Constants.inputChannels * Constants.inputHeight * Constants.inputWidth];
     long [] shape = {Constants.batchSize , Constants.inputChannels , Constants.inputHeight , Constants.inputWidth};
@@ -132,7 +133,7 @@ public class Classifier {
         Bitmap bitmap;
         Resources res = context.getResources(); //if you are in an activity
         AssetManager am = res.getAssets();
-        String fileList[] = new String[0];
+        String[] fileList = new String[0];
         try {
             fileList = am.list("test");
         } catch (IOException e) {
