@@ -19,7 +19,7 @@ public class SettingsPage extends AppCompatActivity {
                 Constants.CHOSEN_MODEL = Constants.nof32;
             }
             else if (buttonView.getId() == R.id.ptnof32){
-                Constants.CHOSEN_MODEL = Constants.ptnof32;
+                Constants.CHOSEN_MODEL = Constants.normOptF32;
             }
             else if (buttonView.getId() == R.id.oi8){
                 Constants.CHOSEN_MODEL = Constants.oi8;
@@ -43,7 +43,7 @@ public class SettingsPage extends AppCompatActivity {
 
         if(Constants.CHOSEN_MODEL.equals(Constants.nof32))
             nof32.setChecked(true);
-        else if(Constants.CHOSEN_MODEL.equals(Constants.ptnof32))
+        else if(Constants.CHOSEN_MODEL.equals(Constants.normOptF32))
             ptnof32.setChecked(true);
         else if(Constants.CHOSEN_MODEL.equals(Constants.oi8))
             oi8.setChecked(true);
