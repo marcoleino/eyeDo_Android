@@ -21,14 +21,13 @@ public class Constants {
     //Variables
     public static final int CODE_CAMERA_PERMISSION = 111;
     public static final int CODE_WRITE_EXTERNAL_STORAGE = 112;
-    public static final String EXTERNAL_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "data" + File.separator;
 
     //Models
-    public static final String ptnof32 = "part_trained_not_optimized_float32.pt";
+    public static final String normOptF32 = "normalized_nonopt_float32.pt";
     public static final String nof32 = "not_optimized_float32.pt";
     public static final String oi8 = "optimized_int8.pt";
     public static final String of32 = "optimized_float32.pt";
-    public static String CHOSEN_MODEL = nof32;
+    public static String CHOSEN_MODEL = of32;
 
     //Testing
     public static long startPreElab;

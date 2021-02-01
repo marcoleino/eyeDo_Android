@@ -12,13 +12,14 @@ import org.pytorch.Module;
 import org.pytorch.IValue;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 
 public class Classifier {
 
     Module model;
-    //float[] mean = {120.56737612047593f, 119.16664454573734f, 113.84554638827127f};
-    //float[] std = {66.32028460114392f, 65.09469952002551f, 65.67726614496246f};
+    float[] meanNorm = {120.56737612047593f, 119.16664454573734f, 113.84554638827127f};
+    float[] stdNorm = {66.32028460114392f, 65.09469952002551f, 65.67726614496246f};
     //float[] mean = TensorImageUtils.TORCHVISION_NORM_MEAN_RGB;
     //float[] std = TensorImageUtils.TORCHVISION_NORM_STD_RGB;
     float[] mean = {0.00000000000000f, 0.00000000000000f, 0.00000000000000f};
@@ -44,13 +45,26 @@ public class Classifier {
             bitmap = Utils.resize(bitmap, Constants.inputHeight, Constants.inputWidth);
         int t;
         //Manually creating a flat rgb array referring to a (1,3,576,768) shape
-        //1. transposing the dimensions: (768,576,3) --> (1,3,576,768)
-        for (int h = 0; h < bitmap.getHeight(); h++){
-            for(int w = 0; w < bitmap.getWidth(); w++){
-                t = bitmap.getPixel(w,h);
-                pix[0][0][h][w] = Color.red(t);
-                pix[0][1][h][w] = Color.green(t);
-                pix[0][2][h][w] = Color.blue(t);
+        if(!Constants.CHOSEN_MODEL.equals(Constants.normOptF32)) {
+            //1a. transposing the dimensions: (768,576,3) --> (1,3,576,768)
+            for (int h = 0; h < bitmap.getHeight(); h++) {
+                for (int w = 0; w < bitmap.getWidth(); w++) {
+                    t = bitmap.getPixel(w, h);
+                    pix[0][0][h][w] = (t >> 16) & 0xFF;//Color.red(t);
+                    pix[0][1][h][w] = (t >> 8) & 0xFF;//Color.green(t);
+                    pix[0][2][h][w] = t & 0xFF; //Color.blue(t);
+                }
+            }
+        }
+        else {
+            //1b.  transposing the dimensions: (768,576,3) --> (1,3,576,768) for a normalized input: applying (pixel-mean)/std
+            for (int h = 0; h < bitmap.getHeight(); h++) {
+                for (int w = 0; w < bitmap.getWidth(); w++) {
+                    t = bitmap.getPixel(w, h);
+                    pix[0][0][h][w] = ((((t >> 16) & 0xFF)-meanNorm[0])/stdNorm[0]);
+                    pix[0][1][h][w] = (((t >> 8) & 0xFF) - meanNorm[1]) / stdNorm[1];
+                    pix[0][2][h][w] = ((t & 0xFF) - meanNorm[2]) / stdNorm[2];
+                }
             }
         }
         //2. flattening the array
@@ -63,6 +77,17 @@ public class Classifier {
                 }
             }
         }
+        //Testing if the mean is the desired one
+        /*float sum = 0;
+        for(int i=0; i<pixFlat.length; i++){
+            sum = sum + pixFlat[i];
+        }*/
+        //double average = sum / pixFlat.length;
+        double min = Utils.getMinValue(pixFlat);
+
+        //System.out.println("MIN: " + min + " AVERAGE: " +average);
+        System.out.println("MINSSS        " +min);
+
         return Tensor.fromBlob( pixFlat, shape );
     }
 
