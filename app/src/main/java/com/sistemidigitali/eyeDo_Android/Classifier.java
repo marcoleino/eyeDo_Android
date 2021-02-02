@@ -10,7 +10,6 @@ import android.util.Log;
 import org.pytorch.IValue;
 import org.pytorch.Module;
 import org.pytorch.Tensor;
-import org.pytorch.torchvision.TensorImageUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +28,8 @@ public class Classifier {
     float[][][][] pix = new float[Constants.batchSize][Constants.inputChannels][Constants.inputHeight][Constants.inputWidth];
     float[] pixFlat = new float[Constants.batchSize * Constants.inputChannels * Constants.inputHeight * Constants.inputWidth];
     long[] shape = {Constants.batchSize, Constants.inputChannels, Constants.inputHeight, Constants.inputWidth};
-
-    private Tensor tensor;
     Context context;
+    private Tensor tensor;
 
     public Classifier(String modelPath, Context context) {
         model = Module.load(modelPath);
@@ -49,7 +47,7 @@ public class Classifier {
         bitmap.getPixels(pixels, 0, Constants.inputWidth, 0, 0, Constants.inputWidth, Constants.inputHeight);
         int startFirstChannel = 0;
         int startSecondChannel = Constants.inputWidth * Constants.inputHeight;
-        int startThirdChannel = startFirstChannel + 2*startSecondChannel;
+        int startThirdChannel = startFirstChannel + 2 * startSecondChannel;
         //Manually creating a flat rgb array referring to a (1,3,576,768) shape
         if (!Constants.CHOSEN_MODEL.equals(Constants.normOptF32)) {
             //1a. transposing the dimensions: (768,576,3) --> (1,3,576,768) and flattening the array in only one for cycle
@@ -64,9 +62,9 @@ public class Classifier {
             //      before applying the formula it's necessary to run a first color normalization, dividing each color by 255
             for (int i = 0; i < pixels.length; i++) {
                 t = pixels[i];
-                pixFlat[startFirstChannel++] = ((float)((t >> 16) & 0xFF)/255.0f - meanNorm[0]) / stdNorm[0];//Color.red(t);
-                pixFlat[startSecondChannel++] = ((float)((t >> 8) & 0xFF)/255.0f - meanNorm[1]) / stdNorm[1];//Color.green(t);
-                pixFlat[startThirdChannel++] = ((float)(t & 0xFF)/255.0f - meanNorm[2]) / stdNorm[2];//Color.blue(t);
+                pixFlat[startFirstChannel++] = ((float) ((t >> 16) & 0xFF) / 255.0f - meanNorm[0]) / stdNorm[0];//Color.red(t);
+                pixFlat[startSecondChannel++] = ((float) ((t >> 8) & 0xFF) / 255.0f - meanNorm[1]) / stdNorm[1];//Color.green(t);
+                pixFlat[startThirdChannel++] = ((float) (t & 0xFF) / 255.0f - meanNorm[2]) / stdNorm[2];//Color.blue(t);
             }
         }
         return Tensor.fromBlob(pixFlat, shape);
