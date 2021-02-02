@@ -130,8 +130,6 @@ public class Camera2 extends MyCamera {
             CoordinatorLayout.LayoutParams cl;
             for (Size size : sizes) {
                 imageDimension = size;
-                //scarta le opzioni che che hanno risoluzione inferiore a 480p (720*480)
-                //scarta le opzioni che che hanno risoluzione superiore a 2K (2048*1152)
                 if (((float) imageDimension.getWidth() / (float) imageDimension.getHeight()) == (4f / 3f) &&
                         (imageDimension.getHeight() * imageDimension.getWidth()) >= (Constants.inputWidth * Constants.inputHeight)) {
                     preferredRatio = true;
@@ -174,7 +172,6 @@ public class Camera2 extends MyCamera {
         float centerX = textureRectF.centerX();
         float centerY = textureRectF.centerY();
         float scale = (float) 4 / (float) 3;
-        //scale = Math.max((float)width, mTextureView.getWidth())/ Math.max((float)heigth, mTextureView.getHeight());
         matrix.postScale(1 / scale, scale, centerX, centerY);
         matrix.postRotate(rotation, centerX, centerY);
         mTextureView.setTransform(matrix);

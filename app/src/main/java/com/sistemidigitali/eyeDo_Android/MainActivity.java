@@ -1,14 +1,29 @@
 package com.sistemidigitali.eyeDo_Android;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import static com.sistemidigitali.eyeDo_Android.Utils.assetFilePath;
@@ -75,6 +90,34 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         classifier = new Classifier(assetFilePath(this, Constants.CHOSEN_MODEL), this);
         sound = new SoundThread(this);
         sound.start();
+
+        //Make tipsToast if it's the first time in the app :)
+        Handler handler = new Handler();
+        final Runnable r = new Runnable() {
+            public void run() {
+                handler.postDelayed(this, 10000);
+                try {
+                    File f = new File(getApplicationContext().getFilesDir()+"/notFirstTime");
+                    if (!f.exists()){
+                        f.createNewFile();
+                        Context context = getApplicationContext();
+
+                        CharSequence text = "If you don't see the camera, please restart the app!";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                        text = "You can click on the TrafficLight to see the stats (and vice-versa)! :)";
+                        duration = Toast.LENGTH_LONG;
+                        toast = Toast.makeText(context, text, duration);
+                        toast.show();
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        handler.postDelayed(r, 7000);
     }
 
     public void buttonHandler(View view) {
@@ -106,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         possibly useful
         */
     }
-
 
     @Override
     public void internalElaboration(Bitmap data, String imgFormat) {

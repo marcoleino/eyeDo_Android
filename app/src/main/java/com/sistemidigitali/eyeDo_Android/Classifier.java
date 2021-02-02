@@ -10,6 +10,7 @@ import android.util.Log;
 import org.pytorch.IValue;
 import org.pytorch.Module;
 import org.pytorch.Tensor;
+import org.pytorch.torchvision.TensorImageUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ public class Classifier {
     float[] pixFlat = new float[Constants.batchSize * Constants.inputChannels * Constants.inputHeight * Constants.inputWidth];
     long[] shape = {Constants.batchSize, Constants.inputChannels, Constants.inputHeight, Constants.inputWidth};
 
+    private Tensor tensor;
     Context context;
 
     public Classifier(String modelPath, Context context) {
@@ -73,7 +75,7 @@ public class Classifier {
     public String predict(Bitmap bitmap) {
         //predictTest();
         Constants.startPreElab = System.currentTimeMillis();
-        Tensor tensor = preElaboration(bitmap);
+        tensor = preElaboration(bitmap);
         Constants.endPreElab = System.currentTimeMillis();
 
 
@@ -122,6 +124,8 @@ public class Classifier {
                     Constants.startElab = System.currentTimeMillis();
                     IValue iv = model.forward(inputs);
                     Constants.endElab = System.currentTimeMillis();
+
+
 
                     //Process outputs: mode and coordinates
                     IValue[] outs = iv.toTuple();
