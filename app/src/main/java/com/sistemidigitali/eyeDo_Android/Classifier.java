@@ -36,17 +36,6 @@ public class Classifier {
         this.context = context;
     }
 
-    public static double[] multiply(double[][] a, double[] x) {
-        int m = a.length;
-        int n = a[0].length;
-        if (x.length != n) throw new RuntimeException("Illegal matrix dimensions.");
-        double[] y = new double[m];
-        for (int i = 0; i < m; i++)
-            for (int j = 0; j < n; j++)
-                y[i] += a[i][j] * x[j];
-        return y;
-    }
-
     private Tensor preElaboration(Bitmap bitmap) {
         //if the ratio of the bitmap is close to the Constants.ratio--> apply a normal resize; otherwise apply a custom resize (fill with black pixels to adapt to the Constants.ratio without stretching the image)
         if ((((float) bitmap.getWidth() / (float) bitmap.getHeight()) - Constants.ratio) < 0.1 || (((float) bitmap.getWidth() / (float) bitmap.getHeight()) - Constants.ratio) > -0.1)
@@ -54,49 +43,30 @@ public class Classifier {
         else
             bitmap = Utils.resize(bitmap, Constants.inputHeight, Constants.inputWidth);
         int t;
+        int[] pixels = new int[Constants.inputWidth * Constants.inputHeight];
+        bitmap.getPixels(pixels, 0, Constants.inputWidth, 0, 0, Constants.inputWidth, Constants.inputHeight);
+        int startFirstChannel = 0;
+        int startSecondChannel = Constants.inputWidth * Constants.inputHeight;
+        int startThirdChannel = startFirstChannel + 2*startSecondChannel;
         //Manually creating a flat rgb array referring to a (1,3,576,768) shape
         if (!Constants.CHOSEN_MODEL.equals(Constants.normOptF32)) {
-            //1a. transposing the dimensions: (768,576,3) --> (1,3,576,768)
-            for (int h = 0; h < bitmap.getHeight(); h++) {
-                for (int w = 0; w < bitmap.getWidth(); w++) {
-                    t = bitmap.getPixel(w, h);
-                    pix[0][0][h][w] = (t >> 16) & 0xFF;//Color.red(t);
-                    pix[0][1][h][w] = (t >> 8) & 0xFF;//Color.green(t);
-                    pix[0][2][h][w] = t & 0xFF; //Color.blue(t);
-                }
+            //1a. transposing the dimensions: (768,576,3) --> (1,3,576,768) and flattening the array in only one for cycle
+            for (int i = 0; i < pixels.length; i++) {
+                t = pixels[i];
+                pixFlat[startFirstChannel++] = (t >> 16) & 0xFF;//Color.red(t);
+                pixFlat[startSecondChannel++] = (t >> 8) & 0xFF;//Color.green(t);
+                pixFlat[startThirdChannel++] = t & 0xFF;//Color.blue(t);
             }
         } else {
-            //1b.  transposing the dimensions: (768,576,3) --> (1,3,576,768) for a normalized input: applying (pixel-mean)/std
-            for (int h = 0; h < bitmap.getHeight(); h++) {
-                for (int w = 0; w < bitmap.getWidth(); w++) {
-                    t = bitmap.getPixel(w, h);
-                    pix[0][0][h][w] = ((((t >> 16) & 0xFF) - meanNorm[0]) / stdNorm[0]);
-                    pix[0][1][h][w] = (((t >> 8) & 0xFF) - meanNorm[1]) / stdNorm[1];
-                    pix[0][2][h][w] = ((t & 0xFF) - meanNorm[2]) / stdNorm[2];
-                }
+            //1b.  transposing the dimensions: (768,576,3) --> (1,3,576,768) for a normalized input: applying (pixel-mean)/std + flattening the array in only one for cycle
+            //      before applying the formula it's necessary to run a first color normalization, dividing each color by 255
+            for (int i = 0; i < pixels.length; i++) {
+                t = pixels[i];
+                pixFlat[startFirstChannel++] = ((float)((t >> 16) & 0xFF)/255.0f - meanNorm[0]) / stdNorm[0];//Color.red(t);
+                pixFlat[startSecondChannel++] = ((float)((t >> 8) & 0xFF)/255.0f - meanNorm[1]) / stdNorm[1];//Color.green(t);
+                pixFlat[startThirdChannel++] = ((float)(t & 0xFF)/255.0f - meanNorm[2]) / stdNorm[2];//Color.blue(t);
             }
         }
-        //2. flattening the array
-        int d = 0;
-        for (int c = 0; c < 3; c++) {
-            for (int h = 0; h < bitmap.getHeight(); h++) {
-                for (int w = 0; w < bitmap.getWidth(); w++) {
-                    pixFlat[d] = pix[0][c][h][w];
-                    d++;
-                }
-            }
-        }
-        //Testing if the mean is the desired one
-        /*float sum = 0;
-        for(int i=0; i<pixFlat.length; i++){
-            sum = sum + pixFlat[i];
-        }*/
-        //double average = sum / pixFlat.length;
-        double min = Utils.getMinValue(pixFlat);
-
-        //System.out.println("MIN: " + min + " AVERAGE: " +average);
-        System.out.println("MINSSS        " + min);
-
         return Tensor.fromBlob(pixFlat, shape);
     }
 
@@ -160,8 +130,6 @@ public class Classifier {
                     Tensor out2 = outs[1].toTensor();
                     float[] scores2 = out2.getDataAsFloatArray();
                     int classIndex = Utils.argMax(scores);
-
-                    //rect = new Rect(coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
 
                     /*The last fully connected layer has two outputs of dimension 5 and
                     4, representing the number of class predictions and the predicted

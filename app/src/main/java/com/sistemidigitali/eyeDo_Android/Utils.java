@@ -24,9 +24,7 @@ import java.util.List;
 public class Utils {
 
 
-
-
-    public static Bitmap convertBitmapFromRGBtoBGR(Bitmap bitmap){
+    public static Bitmap convertBitmapFromRGBtoBGR(Bitmap bitmap) {
         int[] rgbPixels = new int[bitmap.getWidth() * bitmap.getHeight()];
         bitmap.getPixels(rgbPixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
         int t;
@@ -45,35 +43,38 @@ public class Utils {
     }
 
 
-    public static float getMaxValue(float[] numbers){
+    public static float getMaxValue(float[] numbers) {
         float maxValue = numbers[0];
-        for(int i=1;i < numbers.length;i++){
-            if(numbers[i] > maxValue){
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i] > maxValue) {
                 maxValue = numbers[i];
             }
         }
         return maxValue;
     }
-    public static float getMinValue(float[] numbers){
+
+    public static float getMinValue(float[] numbers) {
         float minValue = numbers[0];
-        for(int i=1;i<numbers.length;i++){
-            if(numbers[i] < minValue){
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i] < minValue) {
                 minValue = numbers[i];
             }
         }
         return minValue;
     }
-    public static int argMax(float[] inputs){
+
+    public static int argMax(float[] inputs) {
         int maxIndex = -1;
         float maxvalue = 0.0f;
-        for (int i = 0; i < inputs.length; i++){
-            if(inputs[i] > maxvalue) {
+        for (int i = 0; i < inputs.length; i++) {
+            if (inputs[i] > maxvalue) {
                 maxIndex = i;
                 maxvalue = inputs[i];
             }
         }
         return maxIndex;
     }
+
     public static String assetFilePath(Context context, String assetName) {
         File file = new File(context.getFilesDir(), assetName);
         try (InputStream is = context.getAssets().open(assetName)) {
@@ -94,21 +95,22 @@ public class Utils {
 
 
     //Permissions
-    public static boolean need_requestCAMERAandWRITEPermissions(Activity activity){
-            int permission2 = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
-            if (permission2 != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.CODE_CAMERA_PERMISSION);
-                return true;
-            }
+    public static boolean need_requestCAMERAandWRITEPermissions(Activity activity) {
+        int permission2 = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
+        if (permission2 != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.CODE_CAMERA_PERMISSION);
+            return true;
+        }
         return false;
     }
-    public static boolean need_requestWRITE_EXTERNAL_STORAGE(Activity activity){
-            int permission2 = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            int permission1 = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
-            if (permission1 != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.CODE_WRITE_EXTERNAL_STORAGE);
-                return true;
-            }
+
+    public static boolean need_requestWRITE_EXTERNAL_STORAGE(Activity activity) {
+        int permission2 = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permission1 = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permission1 != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.CODE_WRITE_EXTERNAL_STORAGE);
+            return true;
+        }
         return false;
     }
 
@@ -119,12 +121,13 @@ public class Utils {
      * riempendo di nero gli spazi in eccesso.
      * Attenzione: testata solo per far entrare in QUADRATI qualsiasi immagine in ingresso. Mantiene le proporzioni e 'fa entrare' in quadrati qualsiasi immagine
      * TIME < 1ms
-     * @param in    Bitmap in ingresso
-     * @param newH  Nuova altezza
-     * @param newW  Nuova larghezza
-     * @return  Nuovo Bitmap ridimensionato
+     *
+     * @param in   Bitmap in ingresso
+     * @param newH Nuova altezza
+     * @param newW Nuova larghezza
+     * @return Nuovo Bitmap ridimensionato
      */
-    public static Bitmap resize (Bitmap in, int newH, int newW) {
+    public static Bitmap resize(Bitmap in, int newH, int newW) {
 
         Bitmap out = Bitmap.createBitmap(newH, newW, Bitmap.Config.ARGB_4444);
         int inW = in.getWidth();
@@ -179,11 +182,9 @@ public class Utils {
     }
 
 
-
-    public static String getDateNow(Boolean millisec){
+    public static String getDateNow(Boolean millisec) {
         String form = "yyyyMMdd_HHmmss_SSS";
-        if(!millisec)
-        {
+        if (!millisec) {
             form = "yyyyMMdd HH:mm:ss";
         }
         SimpleDateFormat sdf = new SimpleDateFormat(form);
@@ -191,34 +192,32 @@ public class Utils {
     }
 
 
-
-
-
-    /**Write bitmaps for the last 2 pictures, normal use
+    /**
+     * Write bitmaps for the last 2 pictures, normal use
      *
-     * @param bmp bmp from SCAT usually
-     * @param path path from SCAT usually
-     * @param fileName fileName from SCAT usually
+     * @param bmp       bmp from SCAT usually
+     * @param path      path from SCAT usually
+     * @param fileName  fileName from SCAT usually
      * @param extension .jpeg
      */
 
-    public static boolean writeBitmapOnFile(Bitmap bmp, String path, String fileName, String extension){
-        if(bmp == null || path == null || fileName ==null || extension == null) return false;
+    public static boolean writeBitmapOnFile(Bitmap bmp, String path, String fileName, String extension) {
+        if (bmp == null || path == null || fileName == null || extension == null) return false;
         File folder = new File(path);
         if (!folder.exists()) {
             boolean create = folder.mkdirs();
-            if(!create) {
+            if (!create) {
                 Log.e("error", "non sono riuscito a creare la cartella");
                 return false;
             }
         }
 
-        fileName = Utils.pathCombine(path,fileName+extension);
+        fileName = Utils.pathCombine(path, fileName + extension);
 
         try (FileOutputStream out = new FileOutputStream(fileName)) {
-            if(extension.equalsIgnoreCase(".jpg")) {
+            if (extension.equalsIgnoreCase(".jpg")) {
                 bmp.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
-            }else{
+            } else {
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
                 // PNG is a lossless format, the compression factor (100) is ignored
             }
@@ -230,9 +229,9 @@ public class Utils {
         return true;
     }
 
-    public static  Long calculateAverage(List<Long> nums) {
+    public static Long calculateAverage(List<Long> nums) {
         Long sum = 0l;
-        if(!nums.isEmpty()) {
+        if (!nums.isEmpty()) {
             for (Long mark : nums) {
                 sum += mark;
             }
@@ -245,10 +244,10 @@ public class Utils {
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
-        float scale = (float)4/(float)3;
-        int centerX = bitmap.getWidth()/2;
-        int centerY = bitmap.getHeight()/2;
-        matrix.postScale(scale,1/scale,centerX,centerY);
+        float scale = (float) 4 / (float) 3;
+        int centerX = bitmap.getWidth() / 2;
+        int centerY = bitmap.getHeight() / 2;
+        matrix.postScale(scale, 1 / scale, centerX, centerY);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 

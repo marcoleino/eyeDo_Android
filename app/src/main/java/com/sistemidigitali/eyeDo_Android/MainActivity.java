@@ -2,7 +2,6 @@ package com.sistemidigitali.eyeDo_Android;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.TextureView;
@@ -15,18 +14,18 @@ import java.util.ArrayList;
 import static com.sistemidigitali.eyeDo_Android.Utils.assetFilePath;
 
 
-public class MainActivity extends AppCompatActivity implements CameraEvent{
+public class MainActivity extends AppCompatActivity implements CameraEvent {
 
     Classifier classifier;
+    Bitmap rotated;
+    ArrayList<Long> elabTimes;
+    ArrayList<Long> preElabTimes;
     private MyCamera camera;
     private TextureView textureView;
     private boolean waitFor = false;
     private TextView textView;
-    Bitmap rotated;
-    ArrayList<Long> elabTimes;
-    ArrayList<Long> preElabTimes;
     private SoundThread sound;
-    private String []lastStates;
+    private String[] lastStates;
     private ImageView iv;
 
     @Override
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
         super.onResume();
         begin();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +48,14 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
 
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 iv.setVisibility(View.GONE);
                 textView.setVisibility(View.VISIBLE);
             }
         });
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 textView.setVisibility(View.GONE);
                 iv.setVisibility(View.VISIBLE);
             }
@@ -70,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
         lastStates = new String[3];
 
     }
+
     private void begin() {
         //camera is not accessed, but it's necessary to instantiate it in order to activate the view
         camera = new Camera2(this, this, textureView);
@@ -77,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
         sound = new SoundThread(this);
         sound.start();
     }
+
     public void buttonHandler(View view) {
         switch (view.getId()) {
             case R.id.settings:
@@ -86,18 +86,21 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
                 break;
         }
     }
+
     @Override
     protected void onStop() {
         //paying attention to bitmap recycling
         sound.setKeepGoing(false);
         super.onStop();
     }
+
     @Override
     protected void onPause() {
         //paying attention to bitmap recycling
         sound.setKeepGoing(false);
         super.onPause();
     }
+
     void onPauseCapture() {
         /*
         possibly useful
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
 
     @Override
     public void internalElaboration(Bitmap data, String imgFormat) {
-        rotated = Utils.rotate(data,270);
+        rotated = Utils.rotate(data, 270);
 
         String predicted = classifier.predict(rotated);
         rotated.recycle();
@@ -121,30 +124,30 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
 
     private void showResults(String predicted) {
         //Add state to lastStates and shift
-        for (int i = 1; i < lastStates.length; i++){
-            lastStates[i] = lastStates[i-1];
+        for (int i = 1; i < lastStates.length; i++) {
+            lastStates[i] = lastStates[i - 1];
         }
         lastStates[0] = predicted;
         //Check if it's the right moment to change State (after 3 equal results)
         boolean allEquals = true;
-        for (int i = 1; i < lastStates.length; i++){
-            if(lastStates[0] == null || lastStates[i]==null || !lastStates[i].equals(lastStates[0])){
-                allEquals=false;
+        for (int i = 1; i < lastStates.length; i++) {
+            if (lastStates[0] == null || lastStates[i] == null || !lastStates[i].equals(lastStates[0])) {
+                allEquals = false;
                 break;
             }
         }
-        if(allEquals){
-            for (int i = 0; i < Constants.Classes.length; i++){
-                if(Constants.Classes[i].equals(lastStates[0])){
+        if (allEquals) {
+            for (int i = 0; i < Constants.Classes.length; i++) {
+                if (Constants.Classes[i].equals(lastStates[0])) {
                     //Change Traffic Light Image
-                    if(i==0)
-                        runOnUiThread(() ->iv.setImageResource(R.drawable.tl_red));
-                    else if(i==1)
-                        runOnUiThread(() ->iv.setImageResource(R.drawable.tl_green));
-                    else if(i==4)
-                        runOnUiThread(() ->iv.setImageResource(R.drawable.tl_none));
+                    if (i == 0)
+                        runOnUiThread(() -> iv.setImageResource(R.drawable.tl_red));
+                    else if (i == 1)
+                        runOnUiThread(() -> iv.setImageResource(R.drawable.tl_green));
+                    else if (i == 4)
+                        runOnUiThread(() -> iv.setImageResource(R.drawable.tl_none));
                     else
-                        runOnUiThread(() ->iv.setImageResource(R.drawable.tl_yellow));
+                        runOnUiThread(() -> iv.setImageResource(R.drawable.tl_yellow));
 
                     //Set new Sound state
                     sound.setState(i);
@@ -154,13 +157,12 @@ public class MainActivity extends AppCompatActivity implements CameraEvent{
             }
         }
         //Play sounds
-        preElabTimes.add((Constants.endPreElab-Constants.startPreElab));
-        elabTimes.add((Constants.endElab-Constants.startElab));
+        preElabTimes.add((Constants.endPreElab - Constants.startPreElab));
+        elabTimes.add((Constants.endElab - Constants.startElab));
 
 
-
-        runOnUiThread(() ->  textView.setText(Constants.CHOSEN_MODEL + "\n" + "Predicted class: " +predicted + "\n" + "Pre-elaboration avg time: \n" + Utils.calculateAverage(preElabTimes)+"ms\n" +
-                "Elaboration avg time: \n" + Utils.calculateAverage(elabTimes)+"ms\n " ));
+        runOnUiThread(() -> textView.setText(Constants.CHOSEN_MODEL + "\n" + "Predicted class: " + predicted + "\n" + "Pre-elaboration avg time: \n" + Utils.calculateAverage(preElabTimes) + "ms\n" +
+                "Elaboration avg time: \n" + Utils.calculateAverage(elabTimes) + "ms\n "));
     }
 
 

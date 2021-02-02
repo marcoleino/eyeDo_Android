@@ -1,7 +1,7 @@
 package com.sistemidigitali.eyeDo_Android;
 
 public class DoublePoint {
-    private double x,y;
+    private double x, y;
 
     public DoublePoint(double x, double y) {
         this.x = x;
