@@ -103,11 +103,10 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
                         Context context = getApplicationContext();
 
                         CharSequence text = "If you don't see the camera, please restart the app!";
-                        int duration = Toast.LENGTH_SHORT;
+                        int duration = Toast.LENGTH_LONG;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
                         text = "You can click on the TrafficLight to see the stats (and vice-versa)! :)";
-                        duration = Toast.LENGTH_LONG;
                         toast = Toast.makeText(context, text, duration);
                         toast.show();
 
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
                 }
             }
         };
-        handler.postDelayed(r, 7000);
+        handler.postDelayed(r, 5500);
     }
 
     public void buttonHandler(View view) {

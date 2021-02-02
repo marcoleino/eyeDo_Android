@@ -107,7 +107,6 @@ public class Classifier {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         if (fileList != null) {
             for (int i = 0; i < fileList.length; i++) {
                 try {
@@ -124,8 +123,6 @@ public class Classifier {
                     Constants.startElab = System.currentTimeMillis();
                     IValue iv = model.forward(inputs);
                     Constants.endElab = System.currentTimeMillis();
-
-
 
                     //Process outputs: mode and coordinates
                     IValue[] outs = iv.toTuple();
