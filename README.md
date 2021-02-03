@@ -7,6 +7,8 @@ In this project we train a neural network called LytNet, then we convert the mod
 
 To train and test the CNN we have used Pedestrian-Traffic-Lights (PTL) that is a high-quality image dataset of street intersections, created for the detection of pedestrian traffic lights and zebra crossings. Images have variation in weather, position and orientation in relation to the traffic light and zebra crossing, and size and type of intersection. To download the dataset and for more information visit ImVisible project (link above).
 
+Link to owr repo with <b>Training</b> and <b>Conversion Pytorch to TorchScript</b>: https://github.com/marcoleino/eyeDoPy
+
 ## Application
 
 We have developed a simple app to use the LytNet network to recognize pedestrian traffic light. The app should be used only in landscape mode. The app is composed of a preview of the camera, a settings menu (to choose the type of net to use) and an image of a traffic light that will light based on the color recognized (black if none) that can be clicked to see informations about the net and performance.
