@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         //begin();
         elabTimes = new ArrayList<>();
         preElabTimes = new ArrayList<>();
-        lastStates = new String[3];
+        lastStates = new String[Constants.consecutiveElaborations];
 
     }
 
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
             lastStates[i] = lastStates[i - 1];
         }
         lastStates[0] = predicted;
-        //Check if it's the right moment to change State (after 3 equal results)
+        //Check if it's the right moment to change State (after 4 equal results)
         boolean allEquals = true;
         for (int i = 1; i < lastStates.length; i++) {
             if (lastStates[0] == null || lastStates[i] == null || !lastStates[i].equals(lastStates[0])) {
