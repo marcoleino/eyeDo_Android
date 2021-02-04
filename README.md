@@ -12,7 +12,7 @@ Link to owr repo with <b>Training</b> and <b>Conversion Pytorch to TorchScript</
 
 We have developed a simple app that uses the trained LytNet network to recognize the state of pedestrian traffic lights. The app can be used only in landscape mode. It is composed by a preview of the camera, a settings menu (to choose the type of net to use) and an image of a traffic light that will light differently respect to the recognized color (black if none) which can be clicked to see informations about the net and its performance.
 
-The app changes state of the recognized color only if 3 consecutive net predictions are the same, to increase accuracy at the cost of a slight drop in performance. For each state, the app (a thread) emits a different sound:
+The app changes state of the recognized color only if 4 consecutive net predictions are the same, to increase accuracy at the cost of a slight drop in performance. For each state, the app (a thread) emits a different sound:
 
  1. None: low tone with slow frequency
  2. Red: low tone with slightly higher frequency (1 per sec)
