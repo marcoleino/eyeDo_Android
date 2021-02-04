@@ -1,5 +1,7 @@
 # eyeDo: an Android Application for the Visually Impaired that use LytNet Neural Network to recognize Pedestrian Traffic Light
 
+The dataset and model we used for our project is based on the ones used for the project "ImVisible", explained at this link: https://arxiv.org/abs/1907.09706.
+
 ## Introduction
 The strategy that has been followed is described in the following image:
 
