@@ -143,18 +143,14 @@ public class Camera2 extends MyCamera {
                 imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
                 float ratio = (float) imageDimension.getWidth() / (float) imageDimension.getHeight();
                 w = (int) (float) (h * ratio);
-                cl = new CoordinatorLayout.LayoutParams((int) w, (int) (h));
-                transformImage((int) w, (int) h);
             } else {
                 w = (int) (float) ((h * ((float) 4 / (float) 3)));
-                cl = new CoordinatorLayout.LayoutParams((int) w, (int) h);
-                transformImage((int) w, (int) h);
             }
+            cl = new CoordinatorLayout.LayoutParams((int) w, (int) (h));
+            transformImage((int) w, (int) h);
             mTextureView.setLayoutParams(cl);
             // Ask permissions for the camera
-            if (Utils.need_requestCAMERAandWRITEPermissions(mActivity)) {
-                return;
-            } else {
+            if (!Utils.need_requestCAMERAandWRITEPermissions(mActivity)) {
                 manager.openCamera(cameraId, stateCallback, null);
             }
         } catch (CameraAccessException e) {
@@ -201,7 +197,7 @@ public class Camera2 extends MyCamera {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(mActivity, "Configuration failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "Configuration Failed!", Toast.LENGTH_SHORT).show();
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -211,7 +207,7 @@ public class Camera2 extends MyCamera {
 
     private void updatePreview() {
         if (null == cameraDevice) {
-            Log.e(TAG, "null Preview! Error");
+            Log.e(TAG, "Error: preview is null");
         }
         captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         try {
@@ -222,19 +218,8 @@ public class Camera2 extends MyCamera {
     }
 
     private void startBackgroundThread() {
-        mBackgroundThread = new HandlerThread("Camera Background");
+        mBackgroundThread = new HandlerThread("Camera-Background");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
-    }
-
-    private void stopBackgroundThread() {
-        mBackgroundThread.quitSafely();
-        try {
-            mBackgroundThread.join();
-            mBackgroundThread = null;
-            mBackgroundHandler = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

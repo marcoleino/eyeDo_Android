@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         //camera is not accessed, but it's necessary to instantiate it in order to activate the view
         camera = new Camera2(this, this, textureView);
         classifier = new Classifier(assetFilePath(this, Constants.CHOSEN_MODEL), this);
-        sound = new SoundThread(this);
+        sound = new SoundThread();
         sound.start();
 
         //Make tipsToast if it's the first time in the app :)

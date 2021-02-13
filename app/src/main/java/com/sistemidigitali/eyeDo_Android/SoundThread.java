@@ -1,6 +1,5 @@
 package com.sistemidigitali.eyeDo_Android;
 
-import android.app.Activity;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
@@ -11,8 +10,8 @@ public class SoundThread extends Thread {
     private ToneGenerator noneTone = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
     private boolean keepGoing = true;
 
-    //Inizializza a None
-    public SoundThread(Activity activity) {
+    //Initialize the sound to the one of the class None
+    public SoundThread() {
         stateL = 4;
     }
 
@@ -53,18 +52,12 @@ public class SoundThread extends Thread {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 
     public void setKeepGoing(boolean keepGoing) {
         this.keepGoing = keepGoing;
     }
-
-    public int getStateL() {
-        return stateL;
-    }
-
     public void setState(int state) {
         this.stateL = state;
     }

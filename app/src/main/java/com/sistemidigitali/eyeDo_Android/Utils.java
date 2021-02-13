@@ -23,46 +23,6 @@ import java.util.List;
 
 public class Utils {
 
-
-    public static Bitmap convertBitmapFromRGBtoBGR(Bitmap bitmap) {
-        int[] rgbPixels = new int[bitmap.getWidth() * bitmap.getHeight()];
-        bitmap.getPixels(rgbPixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-        int t;
-        Bitmap bitmap2 = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        for (int h = 0; h < bitmap.getHeight(); h++) {
-            for (int w = 0; w < bitmap.getWidth(); w++) {
-                t = bitmap.getPixel(w, h);
-                int redValue = Color.red(t);
-                int blueValue = Color.blue(t);
-                int greenValue = Color.green(t);
-
-                bitmap2.setPixel(w, h, Color.rgb(blueValue, redValue, greenValue));
-            }
-        }
-        return bitmap2;
-    }
-
-
-    public static float getMaxValue(float[] numbers) {
-        float maxValue = numbers[0];
-        for (int i = 1; i < numbers.length; i++) {
-            if (numbers[i] > maxValue) {
-                maxValue = numbers[i];
-            }
-        }
-        return maxValue;
-    }
-
-    public static float getMinValue(float[] numbers) {
-        float minValue = numbers[0];
-        for (int i = 1; i < numbers.length; i++) {
-            if (numbers[i] < minValue) {
-                minValue = numbers[i];
-            }
-        }
-        return minValue;
-    }
-
     public static int argMax(float[] inputs) {
         int maxIndex = -1;
         float maxvalue = 0.0f;
@@ -93,7 +53,6 @@ public class Utils {
         return null;
     }
 
-
     //Permissions
     public static boolean need_requestCAMERAandWRITEPermissions(Activity activity) {
         int permission2 = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
@@ -103,17 +62,6 @@ public class Utils {
         }
         return false;
     }
-
-    public static boolean need_requestWRITE_EXTERNAL_STORAGE(Activity activity) {
-        int permission2 = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int permission1 = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (permission1 != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.CODE_WRITE_EXTERNAL_STORAGE);
-            return true;
-        }
-        return false;
-    }
-
 
     /**
      * Funzione che produce in uscita un Bitmap che viene ridimensionato a qualsiasi nuova altezza e larghezza, mantenendo le proporzioni
@@ -132,8 +80,8 @@ public class Utils {
         Bitmap out = Bitmap.createBitmap(newH, newW, Bitmap.Config.ARGB_4444);
         int inW = in.getWidth();
         int inH = in.getHeight();
-        int H = -1;
-        int W = -1;
+        int H;
+        int W;
 
         Bitmap resized = null;
 
@@ -181,54 +129,6 @@ public class Utils {
         return finalPath.getPath();
     }
 
-
-    public static String getDateNow(Boolean millisec) {
-        String form = "yyyyMMdd_HHmmss_SSS";
-        if (!millisec) {
-            form = "yyyyMMdd HH:mm:ss";
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat(form);
-        return sdf.format(new Date());
-    }
-
-
-    /**
-     * Write bitmaps for the last 2 pictures, normal use
-     *
-     * @param bmp       bmp from SCAT usually
-     * @param path      path from SCAT usually
-     * @param fileName  fileName from SCAT usually
-     * @param extension .jpeg
-     */
-
-    public static boolean writeBitmapOnFile(Bitmap bmp, String path, String fileName, String extension) {
-        if (bmp == null || path == null || fileName == null || extension == null) return false;
-        File folder = new File(path);
-        if (!folder.exists()) {
-            boolean create = folder.mkdirs();
-            if (!create) {
-                Log.e("error", "non sono riuscito a creare la cartella");
-                return false;
-            }
-        }
-
-        fileName = Utils.pathCombine(path, fileName + extension);
-
-        try (FileOutputStream out = new FileOutputStream(fileName)) {
-            if (extension.equalsIgnoreCase(".jpg")) {
-                bmp.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
-            } else {
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-                // PNG is a lossless format, the compression factor (100) is ignored
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
     public static Long calculateAverage(List<Long> nums) {
         Long sum = 0l;
         if (!nums.isEmpty()) {
@@ -240,7 +140,6 @@ public class Utils {
         return sum;
     }
 
-
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
@@ -250,5 +149,4 @@ public class Utils {
         matrix.postScale(scale, 1 / scale, centerX, centerY);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
-
 }

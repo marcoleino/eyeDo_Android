@@ -10,7 +10,6 @@ public class Constants {
     public static final float ratio = 4f / 3f;
     //Variables
     public static final int CODE_CAMERA_PERMISSION = 111;
-    public static final int CODE_WRITE_EXTERNAL_STORAGE = 112;
     public static final int consecutiveElaborations = 4;
     //Models
     public static final String normOptF32 = "normalized_opt_float32.pt";
