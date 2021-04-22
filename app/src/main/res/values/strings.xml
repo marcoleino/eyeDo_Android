@@ -5,7 +5,8 @@
     <string name="LNV2_Int8">LYTNetV2 - Int 8</string>
     <!--<string name="NormalizedNotOptimizedFloat32">Normalized - Not optimized - Float 32</string>-->
     <string name="NNmodel">NN model:</string>
-    <string name="optimizedInt8">LYTNetV1 - Int 8</string>
+    <string name="LNV1_Int8">LYTNetV1 - Int 8</string>
+
 
     <string name="DrawDirections">Draw directions:</string>
     <string name="noNone">Without None class</string>

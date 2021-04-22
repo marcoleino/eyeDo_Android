@@ -37,7 +37,7 @@
                 android:id="@+id/oi8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/optimizedInt8" />
+                android:text="@string/LNV1_Int8" />
             <RadioButton
                 android:id="@+id/mixed"
                 android:layout_width="match_parent"

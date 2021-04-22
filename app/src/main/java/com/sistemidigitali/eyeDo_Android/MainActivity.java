@@ -276,8 +276,11 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         preElabTimes.add((Constants.endPreElab - Constants.startPreElab));
         elabTimes.add((Constants.endElab - Constants.startElab));
 
-
-        runOnUiThread(() -> textView.setText(Constants.CHOSEN_MODEL + "\n" + "Predicted class: " + predicted + "\n" + "Pre-elaboration avg time: \n" + Utils.calculateAverage(preElabTimes) + "ms\n" +
+        String chosen;
+        if(Constants.MixedNets)
+            chosen = "Mixed V1/V2";
+        else chosen= Constants.CHOSEN_MODEL;
+        runOnUiThread(() -> textView.setText( chosen+ "\n" + "Predicted class: " + predicted + "\n" + "Pre-elaboration avg time: \n" + Utils.calculateAverage(preElabTimes) + "ms\n" +
                 "Elaboration avg time: \n" + Utils.calculateAverage(elabTimes) + "ms\n "));
     }
 
