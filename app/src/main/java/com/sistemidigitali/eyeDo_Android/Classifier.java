@@ -5,11 +5,17 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Environment;
 import android.util.Log;
 
 import org.pytorch.IValue;
 import org.pytorch.Module;
 import org.pytorch.Tensor;
+import org.pytorch.torchvision.TensorImageUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,8 +28,8 @@ public class Classifier {
     float[] stdNorm = {66.32028460114392f, 65.09469952002551f, 65.67726614496246f};
     //float[] mean = TensorImageUtils.TORCHVISION_NORM_MEAN_RGB;
     //float[] std = TensorImageUtils.TORCHVISION_NORM_STD_RGB;
-    float[] mean = {0.00000000000000f, 0.00000000000000f, 0.00000000000000f};
-    float[] std = {1.00000000000000f, 1.00000000000000f, 1.00000000000000f};
+    //float[] mean = {0.00000000000000f, 0.00000000000000f, 0.00000000000000f};
+    //float[] std = {1.00000000000000f, 1.00000000000000f, 1.00000000000000f};
 
     float[][][][] pix = new float[Constants.batchSize][Constants.inputChannels][Constants.inputHeight][Constants.inputWidth];
     float[] pixFlat = new float[Constants.batchSize * Constants.inputChannels * Constants.inputHeight * Constants.inputWidth];
@@ -70,11 +76,13 @@ public class Classifier {
         return Tensor.fromBlob(pixFlat, shape);
     }
 
-    public String predict(Bitmap bitmap) {
+    public Result predict(Bitmap bitmap) {
+        //Useful for test purposes
         //predictTest();
         Constants.startPreElab = System.currentTimeMillis();
         tensor = preElaboration(bitmap);
         Constants.endPreElab = System.currentTimeMillis();
+
 
 
         IValue inputs = IValue.from(tensor);
@@ -91,10 +99,13 @@ public class Classifier {
         float[] scores2 = out2.getDataAsFloatArray();
 
         int classIndex = Utils.argMax(scores);
-        return Constants.Classes[classIndex];
+
+        return new Result(Constants.Classes[classIndex], scores2);
     }
 
     public String predictTest() {
+
+
 
         Bitmap bitmap;
         Resources res = context.getResources(); //if you are in an activity
@@ -106,15 +117,24 @@ public class Classifier {
             e.printStackTrace();
         }
         if (fileList != null) {
+            //TODO da togliere senza test
+            int inn = 0;
             for (int i = 0; i < fileList.length; i++) {
                 try {
                     InputStream is = am.open("test/" + fileList[i]);
+
+
                     bitmap = BitmapFactory.decodeStream(is);
                     is.close();
+
+
 
                     Constants.startPreElab = System.currentTimeMillis();
                     Tensor hopeTensor = preElaboration(bitmap);
                     Constants.endPreElab = System.currentTimeMillis();
+
+                    Tensor tensor = TensorImageUtils.bitmapToFloat32Tensor(bitmap,
+                            TensorImageUtils.TORCHVISION_NORM_MEAN_RGB, TensorImageUtils.TORCHVISION_NORM_STD_RGB);
 
                     //Lunch inference
                     IValue inputs = IValue.from(hopeTensor);
@@ -130,10 +150,19 @@ public class Classifier {
                     float[] scores2 = out2.getDataAsFloatArray();
                     int classIndex = Utils.argMax(scores);
 
+                    //Bitmap workingBitmap = Bitmap.createBitmap(bitmap);
+                    Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
                     /*The last fully connected layer has two outputs of dimension 5 and
                     4, representing the number of class predictions and the predicted
                     coordinates respectively*/
 
+                    Bitmap real = Utils.crearPunto(scores2[0]*(float)876,scores2[1]*(float)657,scores2[2]*(float)876,scores2[3]*(float)657, Color.RED, Bitmap.createScaledBitmap(mutableBitmap, 876, 657, false));
+
+
+                    Utils.writeBitmapOnFile(real, Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.sistemidigitali.eyeDo_Android/files" , ""+inn, ".jpeg" );
+                    inn++;
+
+                    //TODO provare
                     System.out.println("Prediction for: " + fileList[i] + " --> " + Constants.Classes[classIndex] + " SCORES_: " + scores);
                     bitmap.recycle();
                     bitmap = null;
@@ -145,5 +174,7 @@ public class Classifier {
         }
         return "Test finished!";
     }
+
+
 }
 

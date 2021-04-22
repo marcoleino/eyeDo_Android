@@ -22,28 +22,58 @@
             android:layout_height="wrap_content">
 
             <RadioButton
-                android:id="@+id/nof32"
+                android:id="@+id/V2oi8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/NotOptimizedFloat32" />
-
+                android:text="@string/LNV2_Int8" />
+<!--
             <RadioButton
                 android:id="@+id/ptnof32"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/NormalizedNotOptimizedFloat32" />
-
+-->
             <RadioButton
                 android:id="@+id/oi8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/optimizedInt8" />
-
+            <RadioButton
+                android:id="@+id/mixed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mixed" />
+<!--
             <RadioButton
                 android:id="@+id/of32"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/optimizedFloat32" />
+-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/DrawDirections"
+            android:textAlignment="gravity" />
+
+        </RadioGroup>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/noNone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/noNone" />
+            <RadioButton
+                android:id="@+id/yesNone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/yesNone" />
+
         </RadioGroup>
     </LinearLayout>
 

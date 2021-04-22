@@ -147,12 +147,17 @@ public class Camera2 extends MyCamera {
                 w = (int) (float) ((h * ((float) 4 / (float) 3)));
             }
             cl = new CoordinatorLayout.LayoutParams((int) w, (int) (h));
+            //TransparentView needs these dimensions
+            Constants.printedImageWidth = (int) w;
+            Constants.printedImageHeight = (int) h;
             transformImage((int) w, (int) h);
             mTextureView.setLayoutParams(cl);
             // Ask permissions for the camera
             if (!Utils.need_requestCAMERAandWRITEPermissions(mActivity)) {
                 manager.openCamera(cameraId, stateCallback, null);
             }
+
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }

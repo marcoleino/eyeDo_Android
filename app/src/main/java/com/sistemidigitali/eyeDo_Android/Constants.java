@@ -13,19 +13,28 @@ public class Constants {
     public static final int consecutiveElaborations = 4;
     //Models
     public static final String normOptF32 = "normalized_opt_float32.pt";
-    public static final String nof32 = "not_optimized_float32.pt";
-    public static final String oi8 = "optimized_int8.pt";
-    public static final String of32 = "optimized_float32.pt";
+    public static final String LNV2_oi8 = "LYTNetV2_int8.pt";
+    public static final String LNV1_oi8 = "LYTNetV1_int8.pt";
+    //public static final String oi8 = "ObjDetResnet34.pt";
+    //public static final String of32 = "optimized_float32.pt";
     //Classes
     public static String[] Classes = new String[]{
             "red", "green", "cGreen", "cBlank", "none"
     };
-    public static String CHOSEN_MODEL = oi8;
+    public static String CHOSEN_MODEL = LNV2_oi8;
 
     //Testing
     public static long startPreElab;
     public static long endPreElab;
     public static long startElab;
     public static long endElab;
+    public static int printedImageWidth;
+    public static int printedImageHeight;
+
+    public static boolean coordinatesWithNoneClass = false;
+    public static int deltaAngleWarning = 20;
+    public static int deltaAngleMax = 30; //30 degree limit
+    public static float maxDistFromCenterPercentage = 0.15f;
+    public static boolean MixedNets = false;
 }
 

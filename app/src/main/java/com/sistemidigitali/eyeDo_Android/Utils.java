@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -33,6 +34,42 @@ public class Utils {
             }
         }
         return maxIndex;
+    }
+
+    /**
+     * Determines the angle of a straight line drawn between point one and two. The number returned, which is a double in degrees, tells us how much we have to rotate a horizontal line clockwise for it to match the line between the two points.
+     * If you prefer to deal with angles using radians instead of degrees, just change the last line to: "return Math.atan2(yDiff, xDiff);"
+     */
+    public static double GetAngleOfLineBetweenTwoPoints(float x1, float y1, float x2, float y2)
+    {
+        double xDiff = x2 - x1;
+        double yDiff = y2 - y1;
+        return Math.toDegrees(Math.atan2(yDiff, xDiff));
+    }
+
+
+    /**
+     * Function that draws line on bitmap, passing between two points
+     * @param x
+     * @param y
+     * @param xend
+     * @param yend
+     * @param color
+     * @param bmp
+     * @return
+     */
+    public static Bitmap crearPunto(float x, float y, float xend, float yend, int color, Bitmap bmp) {
+
+        //Bitmap real = crearPunto((float)1263*((float)876/(float)4032),(float)960*((float)657/(float)3024),(float)4032*((float)876/(float)4032),(float)2315*((float)657/(float)3024), Color.CYAN, mutableBitmap);
+
+        Canvas c = new Canvas(bmp);
+        Paint p = new Paint();
+        p.setColor(color);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(20);
+        c.drawLine(x, y, xend, yend, p);
+        return bmp;
+
     }
 
     public static String assetFilePath(Context context, String assetName) {
@@ -140,6 +177,17 @@ public class Utils {
         return sum;
     }
 
+    public static float calculateAverage(float[] nums) {
+        float sum = 0l;
+        if (nums!=null) {
+            for (float mark : nums) {
+                sum += mark;
+            }
+            return sum / nums.length;
+        }
+        return sum;
+    }
+
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
@@ -148,5 +196,42 @@ public class Utils {
         int centerY = bitmap.getHeight() / 2;
         matrix.postScale(scale, 1 / scale, centerX, centerY);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+
+    /**Write bitmaps for the last 2 pictures, normal use
+     *
+     * @param bmp bmp
+     * @param path path
+     * @param fileName fileName
+     * @param extension .jpeg
+     */
+    public static boolean writeBitmapOnFile(Bitmap bmp, String path, String fileName, String extension){
+        if(bmp == null || path == null || fileName ==null || extension == null) return false;
+        File folder = new File(path);
+        if (!folder.exists()) {
+            boolean create = folder.mkdirs();
+            if(!create) {
+                Log.e("error", "non sono riuscito a creare la cartella");
+                return false;
+            }
+        }
+
+
+
+        fileName = Utils.pathCombine(path,fileName+extension);
+
+        try (FileOutputStream out = new FileOutputStream(fileName)) {
+            if(extension.equalsIgnoreCase(".jpg")) {
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+            }else{
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+                // PNG is a lossless format, the compression factor (100) is ignored
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

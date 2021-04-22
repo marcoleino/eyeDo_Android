@@ -8,13 +8,26 @@
     tools:context=".MainActivity">
 
 
-    <com.sistemidigitali.eyeDo_Android.AutoFitTextureView
-        android:id="@+id/texture"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:orientation="horizontal">
+        <com.sistemidigitali.eyeDo_Android.AutoFitTextureView
+            android:id="@+id/texture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
 
-        />
+            />
+        <com.sistemidigitali.eyeDo_Android.TransparentView
+            android:id="@+id/TransparentView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            />
+    </android.support.design.widget.CoordinatorLayout>
+
 
 
     <TextView
@@ -40,12 +53,18 @@
 
         />
 
+
+
+
     <ImageView
         android:id="@+id/tlView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        app:srcCompat="@drawable/tl_none" />
+        app:srcCompat="@drawable/tl_none"
+        />
+
+
 
 
 </android.support.design.widget.CoordinatorLayout>
