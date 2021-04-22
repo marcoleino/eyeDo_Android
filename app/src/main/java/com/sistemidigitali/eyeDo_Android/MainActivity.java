@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
 
     public int counterForMixed = 0;
     Classifier classifier;
-    Classifier classifier2;
+    Classifier classifier2;//for mixed
     Bitmap rotatedBitmap;
     ArrayList<Long> elabTimes;
     ArrayList<Long> preElabTimes;
@@ -88,8 +88,10 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
     private void begin() {
         //camera is not accessed, but it's necessary to instantiate it in order to activate the view
         camera = new Camera2(this, this, textureView);
-        if(!Constants.MixedNets)
+        if(!Constants.MixedNets) {
             classifier = new Classifier(assetFilePath(this, Constants.CHOSEN_MODEL), this);
+            classifier2 = null; //free memory if turning off the mixed computation
+        }
         else{
             Log.d("mixed","Mixed started");
             classifier = new Classifier(assetFilePath(this, Constants.LNV1_oi8), this);
