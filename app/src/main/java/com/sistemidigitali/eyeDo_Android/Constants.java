@@ -21,7 +21,7 @@ public class Constants {
     public static String[] Classes = new String[]{
             "red", "green", "cGreen", "cBlank", "none"
     };
-    public static String CHOSEN_MODEL = LNV2_oi8;
+    public static String CHOSEN_MODEL = LNV1_oi8;
 
     //Testing
     public static long startPreElab;
@@ -35,6 +35,6 @@ public class Constants {
     public static int deltaAngleWarning = 20;
     public static int deltaAngleMax = 35; //30 degree limit
     public static float maxDistFromCenterPercentage = 0.25f;
-    public static boolean MixedNets = false;
+    public static boolean MixedNets = true;
 }
 
