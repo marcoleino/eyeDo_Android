@@ -33,8 +33,8 @@ public class Constants {
 
     public static boolean coordinatesWithNoneClass = false;
     public static int deltaAngleWarning = 20;
-    public static int deltaAngleMax = 30; //30 degree limit
-    public static float maxDistFromCenterPercentage = 0.15f;
+    public static int deltaAngleMax = 35; //30 degree limit
+    public static float maxDistFromCenterPercentage = 0.25f;
     public static boolean MixedNets = false;
 }
 
