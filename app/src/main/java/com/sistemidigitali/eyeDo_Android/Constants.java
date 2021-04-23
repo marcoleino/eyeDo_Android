@@ -11,6 +11,7 @@ public class Constants {
     //Variables
     public static final int CODE_CAMERA_PERMISSION = 111;
     public static final int consecutiveElaborations = 4;
+    public static final int consecutiveElaborationsForNone = 6;
     //Models
     public static final String normOptF32 = "normalized_opt_float32.pt";
     public static final String LNV2_oi8 = "LYTNetV2_int8.pt";

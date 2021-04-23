@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         elabTimes = new ArrayList<>();
         preElabTimes = new ArrayList<>();
         lastStates = new String[Constants.consecutiveElaborations];
-        lastCoords = new float[Constants.consecutiveElaborations][4];
+        lastCoords = new float[Constants.consecutiveElaborationsForNone][4];
 
     }
 
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         if(!Constants.MixedNets) {
             classifier = new Classifier(assetFilePath(this, Constants.CHOSEN_MODEL), this);
             classifier2 = null; //free memory if turning off the mixed computation
+            Log.d("mixed", "Mixed deactivated");
         }
         else{
             Log.d("mixed","Mixed started");
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
             }
         }
         else{
+            Log.d("mixed",Constants.CHOSEN_MODEL);
             res = classifier.predict(rotatedBitmap);
         }
         //Bitmap drawing = Utils.crearPunto(coordinates[0]*(float)bitmap.getWidth(),coordinates[1]*(float)bitmap.getHeight(),coordinates[2]*(float)bitmap.getWidth(),coordinates[3]*(float)bitmap.getHeight(), Color.RED, bitmap);
@@ -202,14 +204,14 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
      */
     private void drawResults(float[] coordinates) {
         //Add state to lastStates and shift
-        for (int i = 1; i < lastCoords.length; i++) {
+        for (int i = lastCoords.length-1; i > 0; i--) {
             lastCoords[i] = lastCoords[i - 1];
         }
         lastCoords[0] = coordinates;
         //Check if it's the right moment to draw the Line or to Cancel it (when a None state is found within the last 4 traffic light states)
 
         //If the class None has not been predicted for more than 4 consecutive times...
-        if(Constants.coordinatesWithNoneClass || (globalTrafficLightStateConsecutiveCounter>=Constants.consecutiveElaborations)){
+        if(Constants.coordinatesWithNoneClass || (globalTrafficLightStateConsecutiveCounter>=Constants.consecutiveElaborationsForNone)){
 
             float[] avgCoords = new float[4];
             float avg;
@@ -238,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
      */
     private void showResults(String predicted) {
         //Add state to lastStates and shift
-        for (int i = 1; i < lastStates.length; i++) {
+        for (int i = lastStates.length-1; i > 0; i--) {
             lastStates[i] = lastStates[i - 1];
         }
         lastStates[0] = predicted;
