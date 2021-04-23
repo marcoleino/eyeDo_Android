@@ -94,10 +94,10 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         if(!Constants.MixedNets) {
             classifier = new Classifier(assetFilePath(this, Constants.CHOSEN_MODEL), this);
             classifier2 = null; //free memory if turning off the mixed computation
-            Log.d("mixed", "Mixed deactivated");
+            //Log.d("mixed", "Mixed deactivated");
         }
         else{
-            Log.d("mixed","Mixed started");
+            //Log.d("mixed","Mixed started");
             classifier = new Classifier(assetFilePath(this, Constants.LNV1_oi8), this);
             classifier2 = new Classifier(assetFilePath(this, Constants.LNV2_oi8), this);
         }
@@ -169,19 +169,19 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         if(Constants.MixedNets){
             if(counterForMixed==0){
                 res = classifier.predict(rotatedBitmap);
-                Log.d("mixed","Mixed 1");
+                //Log.d("mixed","Mixed 1");
 
                 counterForMixed = counterForMixed +1;
             }
             else {
-                Log.d("mixed","Mixed 2");
+                //Log.d("mixed","Mixed 2");
 
                 counterForMixed = counterForMixed -1 ;
                 res = classifier2.predict(rotatedBitmap);
             }
         }
         else{
-            Log.d("mixed",Constants.CHOSEN_MODEL);
+            //Log.d("mixed",Constants.CHOSEN_MODEL);
             res = classifier.predict(rotatedBitmap);
         }
         //Bitmap drawing = Utils.crearPunto(coordinates[0]*(float)bitmap.getWidth(),coordinates[1]*(float)bitmap.getHeight(),coordinates[2]*(float)bitmap.getWidth(),coordinates[3]*(float)bitmap.getHeight(), Color.RED, bitmap);
