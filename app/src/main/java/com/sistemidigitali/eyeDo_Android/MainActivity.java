@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
     public int globalTrafficLightStateConsecutiveCounter = 0;
     private ImageView iv;    //Drawing on screen the TL state
     private TransparentView transparentView;
+    private int firstTimeOpeningCount;
+
 
     @Override
     protected void onResume() {
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        firstTimeOpeningCount = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Utils.need_requestCAMERAandWRITEPermissions(this);
@@ -198,11 +201,16 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         endElab();
     }
 
+
     /**
      * Function that draws the predicted coordinates when the class is not None and calculating the moving average from the last 4 found coordinates
      * @param coordinates
      */
     private void drawResults(float[] coordinates) {
+        //not to print the lines if the array  of the last coords is empty at the first app opening
+        if(firstTimeOpeningCount < lastCoords.length){
+            firstTimeOpeningCount = firstTimeOpeningCount+1;
+        }
         //Add state to lastStates and shift
         for (int i = lastCoords.length-1; i > 0; i--) {
             lastCoords[i] = lastCoords[i - 1];
@@ -211,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         //Check if it's the right moment to draw the Line or to Cancel it (when a None state is found within the last 4 traffic light states)
 
         //If the class None has not been predicted for more than 4 consecutive times...
-        if(Constants.coordinatesWithNoneClass || (globalTrafficLightStateConsecutiveCounter>=Constants.consecutiveElaborationsForNone)){
+        if(!(firstTimeOpeningCount < lastCoords.length) && (Constants.coordinatesWithNoneClass || (globalTrafficLightStateConsecutiveCounter>=Constants.consecutiveElaborationsForNone))){
 
             float[] avgCoords = new float[4];
             float avg;
