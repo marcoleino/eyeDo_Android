@@ -22,7 +22,7 @@ import static com.sistemidigitali.eyeDo_Android.Utils.assetFilePath;
 public class MainActivity extends AppCompatActivity implements CameraEvent {
 
 
-    public int counterForMixed = 0;
+    public boolean alternatorForMixed = false;
     Classifier classifier;
     Classifier classifier2;//for mixed
     Bitmap rotatedBitmap;
@@ -167,16 +167,14 @@ public class MainActivity extends AppCompatActivity implements CameraEvent {
         rotatedBitmap = Utils.rotate(data, 270);
         Result res;
         if(Constants.MixedNets){
-            if(counterForMixed==0){
+            if(alternatorForMixed){
                 res = classifier.predict(rotatedBitmap);
                 //Log.d("mixed","Mixed 1");
-
-                counterForMixed = counterForMixed +1;
+                alternatorForMixed = false;
             }
             else {
                 //Log.d("mixed","Mixed 2");
-
-                counterForMixed = counterForMixed -1 ;
+                alternatorForMixed = true;
                 res = classifier2.predict(rotatedBitmap);
             }
         }
